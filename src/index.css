@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --font-script: 'Kaushan Script', cursive;
+  --font-sans: 'Nunito', sans-serif;
+}
+
+:root {
+  --ch: clamp(130px, 17vw, 380px);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+@keyframes drift {
+  to { transform: translateX(calc(var(--tw) * -1)); }
+}
+
+@keyframes float {
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes twinkle {
+  50% { opacity: 0.15; }
+}
+
+@keyframes sway {
+  50% { transform: translate(-14px, 9px); }
+}
+
+.float { animation: float 5s ease-in-out infinite; }
+.twinkle { animation: twinkle 4s ease-in-out infinite; }
+.sway { animation: sway 70s ease-in-out infinite; }
+
+@layer components {
+  .sky {
+    background:
+      radial-gradient(ellipse 65% 60% at 14% 6%, color-mix(in srgb, var(--bottom) 70%, white), transparent 70%),
+      linear-gradient(172deg, var(--bottom) 0%, var(--top) 65%);
+  }
+
+  .paper {
+    background:
+      radial-gradient(ellipse 70% 40% at 80% 100%, color-mix(in srgb, var(--cloud) 30%, transparent), transparent),
+      var(--light);
+  }
+
+  .glass {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.08));
+    backdrop-filter: blur(18px) saturate(1.7);
+    -webkit-backdrop-filter: blur(18px) saturate(1.7);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.75),
+      inset 0 -8px 16px rgba(255, 255, 255, 0.08),
+      0 12px 32px rgba(8, 25, 90, 0.25);
+  }
+
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.35) 0%, transparent 35%, transparent 70%, rgba(255, 255, 255, 0.12) 100%);
+  }
+
+  .glass > * { position: relative; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
