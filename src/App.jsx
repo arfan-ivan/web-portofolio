@@ -16,6 +16,10 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import profile from './assets/arfan.png'
 import resume from './assets/Arfan-Nur-Ivandi-Resume.pdf'
+import emailjs from '@emailjs/browser'
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
 function useInView(threshold = 0.15) {
   const ref = useRef(null)
@@ -510,23 +514,70 @@ export default function App() {
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
           <R>
             <h2 className="flex items-center gap-3 text-2xl font-extrabold"><Send /> SEND ME YOUR MESSAGE</h2>
-            <form className="mt-6 space-y-3" onSubmit={(e) => {
-              e.preventDefault()
-              const f = new FormData(e.target)
-              window.location.href = `mailto:arfanvn@gmail.com?subject=${encodeURIComponent(f.get('subject'))}&body=${encodeURIComponent(f.get('message') + '\n\n' + f.get('name') + ' (' + f.get('email') + ')')}`
-            }}>
-              {[[User, 'name', 'Name', 'text'], [Mail, 'email', 'Email address', 'email'], [Box, 'subject', 'Subject', 'text']].map(([I, n, p, t]) => (
-                <label key={n} className="glass flex items-center gap-3 px-4 py-3 rounded-full">
+            <form
+              className="mt-6 space-y-3"
+              onSubmit={async (e) => {
+                e.preventDefault()
+
+                const form = e.currentTarget
+
+                try {
+                  await emailjs.sendForm(
+                    EMAILJS_SERVICE_ID,
+                    EMAILJS_TEMPLATE_ID,
+                    form,
+                    {
+                      publicKey: EMAILJS_PUBLIC_KEY
+                    }
+                  )
+
+                  alert('Message sent successfully!')
+                  form.reset()
+                } catch (error) {
+                  console.error('EmailJS error:', error)
+                  alert('Failed to send message. Please try again.')
+                }
+              }}
+            >
+              {[
+                [User, 'name', 'Name', 'text'],
+                [Mail, 'email', 'Email address', 'email'],
+                [Box, 'subject', 'Subject', 'text']
+              ].map(([I, n, p, t]) => (
+                <label
+                  key={n}
+                  className="glass flex items-center gap-3 px-4 py-3 rounded-full"
+                >
                   <I className="w-5 h-5" />
-                  <input name={n} type={t} placeholder={p} required className="bg-transparent outline-none w-full placeholder:text-current placeholder:opacity-70" />
+
+                  <input
+                    name={n}
+                    type={t}
+                    placeholder={p}
+                    required
+                    className="bg-transparent outline-none w-full placeholder:text-current placeholder:opacity-70"
+                  />
                 </label>
               ))}
+
               <label className="glass flex gap-3 px-4 py-3 rounded-3xl">
                 <MessageCircle className="w-5 h-5 mt-0.5" />
-                <textarea name="message" rows="4" placeholder="Message" required className="bg-transparent outline-none w-full resize-none placeholder:text-current placeholder:opacity-70" />
+
+                <textarea
+                  name="message"
+                  rows="4"
+                  placeholder="Message"
+                  required
+                  className="bg-transparent outline-none w-full resize-none placeholder:text-current placeholder:opacity-70"
+                />
               </label>
-              <button className="flex items-center gap-2 px-8 py-3 rounded-full bg-sky-400 text-[#0b2a6b] font-extrabold hover:scale-105 transition">
-                <Send className="w-5 h-5" /> SEND
+
+              <button
+                type="submit"
+                className="flex items-center gap-2 px-8 py-3 rounded-full bg-sky-400 text-[#0b2a6b] font-extrabold hover:scale-105 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <Send className="w-5 h-5" />
+                SEND
               </button>
             </form>
           </R>
