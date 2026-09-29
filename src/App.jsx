@@ -400,7 +400,7 @@ export default function App() {
             </div>
           </R>
           <R d={150} className="space-y-5 w-full">
-            {[['Full Name', 'Arfan Nur Ivandi'], ['E-mail', 'arfanvn@gmail.com'], ['Website / Portfolio', 'www.arfanivan.dev']].map(([l, v]) => (
+            {[['Full Name', 'Arfan Nur Ivandi'], ['E-mail', 'arfanvn@gmail.com'], ['Lokasi', 'Malang, Indonesia']].map(([l, v]) => (
               <div key={l}><p className="font-extrabold uppercase text-[var(--acc)]">{l}</p><p className="opacity-75">{v}</p></div>
             ))}
           </R>
